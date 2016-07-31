@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     final int CAMERA_CAPTURE = 1;
     final int REQUEST = 1;
     Bitmap img = null;
-    ArrayList<File> list; //asdasdasdasds
+    ArrayList<String> list; //asdasdasdasds
     int c;
 
     @Override
@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
         popupMenu.show();
     }
 
-    ArrayList<File> imageReader(File root){
-        ArrayList<File> a = new ArrayList<>();
+    ArrayList<String> imageReader(File root){
+        ArrayList<String> a = new ArrayList<>();
 
         File[] files = root.listFiles();
         for (File ff : root.listFiles()) {
@@ -129,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
                 imageReader(ff);
             } else {
                 if (ff.getName().endsWith(".jpg")) {
-                    a.add(ff);
-                    Toast.makeText(this, ff.toString(),Toast.LENGTH_LONG).show();
+                    a.add(ff.getAbsolutePath());
+                    //Toast.makeText(this, ff.toString(),Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -194,9 +194,13 @@ public class MainActivity extends AppCompatActivity {
 
             picture = (ImageView) v.getTag(R.id.picture);
             //name = (TextView) v.getTag(R.id.text);
-
-            picture.setImageURI(Uri.fromFile((File)getItem(i)));
-            //picture.setImageURI(Uri.parse(getItem(i).toString()));
+            try {
+                Bitmap myBitmap = BitmapFactory.decodeFile(getItem(i).toString());
+                picture.setImageBitmap(myBitmap);
+            }
+            catch (Error e){}
+            //picture.setImageURI(Uri.fromFile((File)getItem(i)));
+            //picture.setImageURI(Uri.parse("/storage/emulated/0/DCIM/Camera/IMG_20160709_171750.jpg"));
             //picture.setImageBitmap(MainActivity.img);
             //name.setText(item.name);
 
