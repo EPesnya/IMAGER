@@ -24,6 +24,7 @@ import android.provider.MediaStore.Images.Media;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -123,13 +124,13 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<File> a = new ArrayList<>();
 
         File[] files = root.listFiles();
-        for(int i = 0; i < files.length; i++){
-            if(files[i].isDirectory()){
-                a.addAll( imageReader(files[i]));
-            }
-            else{
-                if(files[i].getName().endsWith(".jpg")){
-                    a.add(files[i]);
+        for (File ff : root.listFiles()) {
+            if (ff.isDirectory()) {
+                imageReader(ff);
+            } else {
+                if (ff.getName().endsWith(".jpg")) {
+                    a.add(ff);
+                    Toast.makeText(this, ff.toString(),Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -194,8 +195,8 @@ public class MainActivity extends AppCompatActivity {
             picture = (ImageView) v.getTag(R.id.picture);
             //name = (TextView) v.getTag(R.id.text);
 
-
-            picture.setImageURI(Uri.parse(getItem(i).toString()));
+            picture.setImageURI(Uri.fromFile((File)getItem(i)));
+            //picture.setImageURI(Uri.parse(getItem(i).toString()));
             //picture.setImageBitmap(MainActivity.img);
             //name.setText(item.name);
 

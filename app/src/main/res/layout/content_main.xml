@@ -18,4 +18,9 @@
         android:horizontalSpacing="0dp"
         android:stretchMode="columnWidth"
         android:verticalSpacing="0dp" />
+
+    <TextView
+        android:id="@+id/debugText"
+        android:layout_width="500dp"
+        android:layout_height="100dp" />
 </RelativeLayout>
