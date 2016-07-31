@@ -23,7 +23,8 @@ import android.provider.MediaStore.Images.Media;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 import android.widget.Toast;
 import 	android.widget.ArrayAdapter;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     Bitmap img = null;
     ArrayList<File> list; //asdasdasdasds
     int c;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,12 +163,12 @@ public class MainActivity extends AppCompatActivity {
     static class ImageAdapter extends ArrayAdapter<File> {
 
         LayoutInflater mInflater;
-        Picasso mPicasso;
+        RequestManager mPicasso;
 
         public ImageAdapter(Context context, File[] objects) {
             super(context, R.layout.grid_item, objects);
             mInflater = LayoutInflater.from(context);
-            mPicasso = Picasso.with(context);
+            mPicasso = Glide.with(context);
         }
 
         @Override
@@ -174,12 +177,17 @@ public class MainActivity extends AppCompatActivity {
             if (view == null) {
                 view = mInflater.inflate(R.layout.grid_item, parent, false);
             }
+
             ImageView imageView = (ImageView) view.findViewById(R.id.picture);
-            mPicasso.load(getItem(position)).centerInside().error(R.drawable.ic_add_white_24px).fit().into(imageView);
+            mPicasso.load(getItem(position))
+                    .centerCrop()
+                    .error(R.drawable.ic_add_white_24px)
+                    .into(imageView);
             return view;
         }
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
