@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.provider.MediaStore;
@@ -24,7 +23,10 @@ import android.provider.MediaStore.Images.Media;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.squareup.picasso.Picasso;
+
 import android.widget.Toast;
+import 	android.widget.ArrayAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     final int CAMERA_CAPTURE = 1;
     final int REQUEST = 1;
     Bitmap img = null;
-    ArrayList<String> list; //asdasdasdasds
+    ArrayList<File> list; //asdasdasdasds
     int c;
 
     @Override
@@ -52,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        list = imageReader(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM));
+        list = imageReader(Environment.getExternalStorageDirectory());
 
         GridView gridview = (GridView) findViewById(R.id.gridView1);
         if (gridview != null) {
-            gridview.setAdapter(new ImageAdapter(this));
+            gridview.setAdapter(new ImageAdapter(this, list.toArray(new File[list.size()])));
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -120,16 +122,16 @@ public class MainActivity extends AppCompatActivity {
         popupMenu.show();
     }
 
-    ArrayList<String> imageReader(File root){
-        ArrayList<String> a = new ArrayList<>();
+    ArrayList<File> imageReader(File root){
+        ArrayList<File> a = new ArrayList<>();
 
         File[] files = root.listFiles();
         for (File ff : root.listFiles()) {
             if (ff.isDirectory()) {
-                imageReader(ff);
+                a.addAll(imageReader(ff));
             } else {
-                if (ff.getName().endsWith(".jpg")) {
-                    a.add(ff.getAbsolutePath());
+                if (ff.getName().endsWith(".jpg") || ff.getName().endsWith(".png")) {
+                    a.add(ff);
                     //Toast.makeText(this, ff.toString(),Toast.LENGTH_LONG).show();
                 }
             }
@@ -155,56 +157,26 @@ public class MainActivity extends AppCompatActivity {
         //super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public class ImageAdapter extends BaseAdapter {
-        private final Integer[] mItems = {
-                R.drawable.picture1, R.drawable.picture2, R.drawable.picture3,
-                R.drawable.picture4, R.drawable.picture1, R.drawable.picture3};
-        private final LayoutInflater mInflater;
+    static class ImageAdapter extends ArrayAdapter<File> {
 
-        public ImageAdapter(Context context) {
+        LayoutInflater mInflater;
+        Picasso mPicasso;
+
+        public ImageAdapter(Context context, File[] objects) {
+            super(context, R.layout.grid_item, objects);
             mInflater = LayoutInflater.from(context);
+            mPicasso = Picasso.with(context);
         }
 
         @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return list.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            View v = view;
-            ImageView picture;
-            //TextView name;
-
-            if (v == null) {
-                v = mInflater.inflate(R.layout.grid_item, viewGroup, false);
-                v.setTag(R.id.picture, v.findViewById(R.id.picture));
-                //v.setTag(R.id.text, v.findViewById(R.id.text));
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+            if (view == null) {
+                view = mInflater.inflate(R.layout.grid_item, parent, false);
             }
-
-            picture = (ImageView) v.getTag(R.id.picture);
-            //name = (TextView) v.getTag(R.id.text);
-            try {
-                Bitmap myBitmap = BitmapFactory.decodeFile(getItem(i).toString());
-                picture.setImageBitmap(myBitmap);
-            }
-            catch (Error e){}
-            //picture.setImageURI(Uri.fromFile((File)getItem(i)));
-            //picture.setImageURI(Uri.parse("/storage/emulated/0/DCIM/Camera/IMG_20160709_171750.jpg"));
-            //picture.setImageBitmap(MainActivity.img);
-            //name.setText(item.name);
-
-            return v;
+            ImageView imageView = (ImageView) view.findViewById(R.id.picture);
+            mPicasso.load(getItem(position)).centerInside().error(R.drawable.ic_add_white_24px).fit().into(imageView);
+            return view;
         }
 
     }
