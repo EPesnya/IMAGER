@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
     final int CAMERA_CAPTURE = 1;
     final int REQUEST = 1;
     Bitmap img = null;
-    ArrayList<File> list;
+    ArrayList<File> list; //asdasdasdasds
+    int c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
