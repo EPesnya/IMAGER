@@ -2,6 +2,7 @@ package com.example.evgeniy.imager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,6 +28,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,10 +50,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        list = imageReader(Environment.getExternalStorageDirectory());
+        list = imageReader(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM));
 
         GridView gridview = (GridView) findViewById(R.id.gridView1);
-        gridview.setAdapter(new ImageAdapter(this));
+        if (gridview != null) {
+            gridview.setAdapter(new ImageAdapter(this));
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -93,7 +97,9 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.menu2:
                                 Intent i = new Intent(Intent.ACTION_PICK);
                                 File pictureDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-                                i.setType("image/*");
+                                String pictureDirPath = pictureDir.getPath();
+                                Uri data = Uri.parse(pictureDirPath);
+                                i.setDataAndType(data, "image/*");
                                 startActivityForResult(i, REQUEST);
                                 return true;
                             default:
@@ -134,15 +140,17 @@ public class MainActivity extends AppCompatActivity {
         img = null;
         if (requestCode == REQUEST && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
+            InputStream inputStream;
+
+
             try {
-                img = Media.getBitmap(getContentResolver(), selectedImage);
+                inputStream = getContentResolver().openInputStream(selectedImage);
+                Bitmap image = BitmapFactory.decodeStream(inputStream);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        super.onActivityResult(requestCode, resultCode, data);
+        //super.onActivityResult(requestCode, resultCode, data);
     }
 
     public class ImageAdapter extends BaseAdapter {
@@ -153,8 +161,6 @@ public class MainActivity extends AppCompatActivity {
 
         public ImageAdapter(Context context) {
             mInflater = LayoutInflater.from(context);
-
-
         }
 
         @Override
