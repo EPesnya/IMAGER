@@ -9,10 +9,11 @@ import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -23,17 +24,19 @@ import android.provider.MediaStore.Images.Media;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 
 import android.widget.Toast;
-import 	android.widget.ArrayAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     final int CAMERA_CAPTURE = 1;
     final int REQUEST = 1;
     Bitmap img = null;
-    ArrayList<File> list; //asdasdasdasds
+    public ArrayList<File> photos; //asdasdasdasds
     int c;
 
 
@@ -57,11 +60,30 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        list = imageReader(Environment.getExternalStorageDirectory());
+        photos = imageReader(Environment.getExternalStorageDirectory());
+
+        Collections.sort(photos, new Comparator<File>() {
+            public int compare(File f1, File f2) {
+                return Long.valueOf(f2.lastModified()).compareTo(Long.valueOf(f1.lastModified()));
+            }
+        });
 
         GridView gridview = (GridView) findViewById(R.id.gridView1);
         if (gridview != null) {
-            gridview.setAdapter(new ImageAdapter(this, list.toArray(new File[list.size()])));
+            final ImageAdapter adapter = new ImageAdapter(this, photos.toArray(new File[photos.size()]));
+            gridview.setAdapter(adapter);
+            gridview.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+
+                    Intent i = new Intent(getApplicationContext(),
+                            FullImageActivity.class);
+                    // передаем индекс массива
+                    i.putExtra("id", photos.get(position).toString());
+                    startActivity(i);
+                }
+            });
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -71,7 +93,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         //.setAction("Action", null).show();
-                showPopupMenu(view);
+                Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()); // название из даты
+
+                File file = new File("/sdcard/CameraExample/",timeStamp+".jpg");
+                Uri photodir1 = Uri.fromFile(file);
+
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photodir1);
+                startActivityForResult(captureIntent, CAMERA_CAPTURE);
 
             }
         });
@@ -99,15 +128,21 @@ public class MainActivity extends AppCompatActivity {
 
                             case R.id.menu1:
                                 Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()); // название из даты
+
+                                File file = new File("/sdcard/CameraExample/",timeStamp+".jpg");
+                                Uri photodir1 = Uri.fromFile(file);
+
+                                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photodir1);
                                 startActivityForResult(captureIntent, CAMERA_CAPTURE);
                                 return true;
                             case R.id.menu2:
-                                Intent i = new Intent(Intent.ACTION_PICK);
+                                /*Intent i = new Intent(Intent.ACTION_PICK);
                                 File pictureDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
                                 String pictureDirPath = pictureDir.getPath();
                                 Uri data = Uri.parse(pictureDirPath);
                                 i.setDataAndType(data, "image/*");
-                                startActivityForResult(i, REQUEST);
+                                startActivityForResult(i, REQUEST);*/
                                 return true;
                             default:
                                 return false;
@@ -131,7 +166,8 @@ public class MainActivity extends AppCompatActivity {
         File[] files = root.listFiles();
         for (File ff : root.listFiles()) {
             if (ff.isDirectory()) {
-                a.addAll(imageReader(ff));
+                if(!(ff.isHidden() || ff.getName().endsWith("Android")))
+                    a.addAll(imageReader(ff));
             } else {
                 if (ff.getName().endsWith(".jpg") || ff.getName().endsWith(".png")) {
                     a.add(ff);
@@ -145,10 +181,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         img = null;
-        if (requestCode == REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == CAMERA_CAPTURE && resultCode == RESULT_OK) {
+            Intent i = new Intent(getApplicationContext(),
+                    MainActivity.class);
+            startActivity(i);
+        }
+            /*
             Uri selectedImage = data.getData();
             InputStream inputStream;
-
 
             try {
                 inputStream = getContentResolver().openInputStream(selectedImage);
@@ -156,36 +196,8 @@ public class MainActivity extends AppCompatActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
         //super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    static class ImageAdapter extends ArrayAdapter<File> {
-
-        LayoutInflater mInflater;
-        RequestManager mPicasso;
-
-        public ImageAdapter(Context context, File[] objects) {
-            super(context, R.layout.grid_item, objects);
-            mInflater = LayoutInflater.from(context);
-            mPicasso = Glide.with(context);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = convertView;
-            if (view == null) {
-                view = mInflater.inflate(R.layout.grid_item, parent, false);
-            }
-
-            ImageView imageView = (ImageView) view.findViewById(R.id.picture);
-            mPicasso.load(getItem(position))
-                    .centerCrop()
-                    .error(R.drawable.ic_add_white_24px)
-                    .into(imageView);
-            return view;
-        }
-
     }
 
 

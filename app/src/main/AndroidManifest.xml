@@ -3,6 +3,7 @@
     package="com.example.evgeniy.imager">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     
     <application
         android:allowBackup="true"
@@ -20,6 +21,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".FullImageActivity">
+            <intent-filter>
+                <action android:name=
+                    "android.intent.action.SEND" />
+                <action android:name=
+                    "android.intent.action.VIEW" />
+                <category android:name=
+                    "android.intent.category.DEFAULT" />
+                <data android:mimeType=
+                    "image/*" />
+            </intent-filter>
+            <provider
+                android:name="android.support.v4.content.FileProvider"
+                android:authorities="com.example.evgeniy.imager.fileprovider"
+                android:grantUriPermissions="true"
+                android:exported="false">
+                <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/filepaths" />
+            </provider>
+        </activity>
+
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
