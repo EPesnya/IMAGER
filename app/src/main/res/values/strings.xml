@@ -2,4 +2,8 @@
     <string name="app_name">Imager</string>
     <string name="action_settings">Settings</string>
     <string name="chooser_title">Share this photo with</string>
+    <string name="full_img_res">FullImgRes</string>
+    <string name="full_img_res_delete">FullImgResDelete</string>
+    <string name="full_img_res_done">FullImgResDone</string>
+    <string name="full_img_res_empty">FullImgResEmpty</string>
 </resources>
