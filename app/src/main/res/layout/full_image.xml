@@ -22,26 +22,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
+        <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Texture"
                 android:id="@+id/button"
-                android:layout_marginLeft="2dp" />
+                android:drawableTop="@mipmap/picture_prev"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Shade"
-                android:id="@+id/button3"
-                android:layout_marginLeft="2dp"/>
+                android:id="@+id/button3"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Share"
-                android:id="@+id/button2"
-                android:layout_marginLeft="2dp" />
+                android:id="@+id/button2" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -68,9 +66,9 @@
                 android:layout_height="wrap_content"
                 android:text="RG"
                 android:id="@+id/button7" />
+
     </LinearLayout>
     </HorizontalScrollView>
-
 
 
 </FrameLayout>

@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -134,6 +136,7 @@ public class FullImageActivity extends Activity {
                         .into(imageView);
             }
         };
+        
 
         button.setOnClickListener(btnOneClk);
         button2.setOnClickListener(btnTwoClk);
