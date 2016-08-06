@@ -4,6 +4,40 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabdelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:src="@android:drawable/ic_menu_delete"
+            android:tint="#000" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabreset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:src="@android:drawable/ic_menu_revert"
+            android:tint="#000" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabsave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:src="@android:drawable/ic_menu_save"
+            android:tint="#000"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabshare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:src="@android:drawable/ic_menu_share"
+            android:tint="#000"/>
+
+    </LinearLayout>
     <ImageView
         android:id="@+id/full_image_view"
         android:layout_width="fill_parent"

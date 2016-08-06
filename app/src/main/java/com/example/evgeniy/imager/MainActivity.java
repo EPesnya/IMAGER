@@ -45,13 +45,13 @@ public class MainActivity extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    public static final int IMAGE_DELETED_CODE = 228;
     final int CAMERA_CAPTURE = 1;
+    final int FULL_IMAGE = 0;
     final int REQUEST = 1;
     Bitmap img = null;
     public ArrayList<File> photos; //asdasdasdasds
     int c;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,23 +68,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        GridView gridview = (GridView) findViewById(R.id.gridView1);
-        if (gridview != null) {
-            final ImageAdapter adapter = new ImageAdapter(this, photos.toArray(new File[photos.size()]));
-            gridview.setAdapter(adapter);
-            gridview.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-
-                    Intent i = new Intent(getApplicationContext(),
-                            FullImageActivity.class);
-                    // передаем индекс массива
-                    i.putExtra("id", photos.get(position).toString());
-                    startActivity(i);
-                }
-            });
-        }
+        setPhotos();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -178,6 +162,28 @@ public class MainActivity extends AppCompatActivity {
         return a;
     }
 
+    void setPhotos()
+    {
+        GridView gridview = (GridView) findViewById(R.id.gridView1);
+        if (gridview != null) {
+            final ImageAdapter adapter = new ImageAdapter(this, photos.toArray(new File[photos.size()]));
+            gridview.setAdapter(adapter);
+            gridview.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+
+                    Intent i = new Intent(getApplicationContext(),
+                            FullImageActivity.class);
+                    // передаем индекс массива
+                    i.putExtra("id", photos.get(position).toString());
+                    startActivityForResult(i, FULL_IMAGE);
+                }
+            });
+        }
+        return;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         img = null;
@@ -186,6 +192,13 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.class);
             startActivity(i);
         }
+        if(requestCode == FULL_IMAGE && resultCode == IMAGE_DELETED_CODE)
+        {
+            photos = imageReader(Environment.getExternalStorageDirectory());
+            setPhotos();
+            Toast.makeText(getApplicationContext(), "Refreshed!", Toast.LENGTH_SHORT).show();
+        }
+
             /*
             Uri selectedImage = data.getData();
             InputStream inputStream;
