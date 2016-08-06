@@ -1,9 +1,8 @@
 package com.example.evgeniy.imager;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -14,24 +13,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.provider.MediaStore;
 import android.widget.GridView;
 import android.graphics.Bitmap;
-import android.provider.MediaStore.Images.Media;
+import android.widget.Toast;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import android.widget.Toast;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,10 +39,9 @@ public class MainActivity extends AppCompatActivity {
     public static final int IMAGE_DELETED_CODE = 228;
     final int CAMERA_CAPTURE = 1;
     final int FULL_IMAGE = 0;
-    final int REQUEST = 1;
     Bitmap img = null;
-    public ArrayList<File> photos; //asdasdasdasds
-    int c;
+    public ArrayList<File> photos;
+    ProgressTask downloadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,15 +50,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        photos = imageReader(Environment.getExternalStorageDirectory());
-
-        Collections.sort(photos, new Comparator<File>() {
-            public int compare(File f1, File f2) {
-                return Long.valueOf(f2.lastModified()).compareTo(Long.valueOf(f1.lastModified()));
-            }
-        });
-
-        setPhotos();
+        downloadTask = new ProgressTask();
+        downloadTask.execute();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -93,74 +76,47 @@ public class MainActivity extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    private void showPopupMenu(View v) {
-        PopupMenu popupMenu = new PopupMenu(this, v);
-        popupMenu.inflate(R.menu.popup_menu); // Для Android 4.0
-        // для версии Android 3.0 нужно использовать длинный вариант
-        // popupMenu.getMenuInflater().inflate(R.menu.popupmenu,
-        // popupMenu.getMenu());
 
-        popupMenu
-                .setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+    class ProgressTask extends AsyncTask<Void, Integer, Void> {
 
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        // Toast.makeText(PopupMenuDemoActivity.this,
-                        // item.toString(), Toast.LENGTH_LONG).show();
-                        // return true;
-                        switch (item.getItemId()) {
+        @Override
+        protected Void doInBackground(Void... root) {
+            photos = imageReader(Environment.getExternalStorageDirectory());
+            return(null);
+        }
 
-                            case R.id.menu1:
-                                Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()); // название из даты
+        ArrayList<File> imageReader(File root){
+            ArrayList<File> a = new ArrayList<>();
 
-                                File file = new File("/sdcard/CameraExample/",timeStamp+".jpg");
-                                Uri photodir1 = Uri.fromFile(file);
-
-                                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photodir1);
-                                startActivityForResult(captureIntent, CAMERA_CAPTURE);
-                                return true;
-                            case R.id.menu2:
-                                /*Intent i = new Intent(Intent.ACTION_PICK);
-                                File pictureDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-                                String pictureDirPath = pictureDir.getPath();
-                                Uri data = Uri.parse(pictureDirPath);
-                                i.setDataAndType(data, "image/*");
-                                startActivityForResult(i, REQUEST);*/
-                                return true;
-                            default:
-                                return false;
-                        }
+            for (File ff : root.listFiles()) {
+                if (ff.isDirectory()) {
+                    if(!(ff.isHidden() || ff.getName().endsWith("Android")))
+                        a.addAll(imageReader(ff));
+                } else {
+                    if (ff.getName().endsWith(".jpg") || ff.getName().endsWith(".png")) {
+                        a.add(ff);
                     }
-                });
-
-        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-
-            @Override
-            public void onDismiss(PopupMenu menu) {
-
-            }
-        });
-        popupMenu.show();
-    }
-
-    ArrayList<File> imageReader(File root){
-        ArrayList<File> a = new ArrayList<>();
-
-        File[] files = root.listFiles();
-        for (File ff : root.listFiles()) {
-            if (ff.isDirectory()) {
-                if(!(ff.isHidden() || ff.getName().endsWith("Android")))
-                    a.addAll(imageReader(ff));
-            } else {
-                if (ff.getName().endsWith(".jpg") || ff.getName().endsWith(".png")) {
-                    a.add(ff);
-                    //Toast.makeText(this, ff.toString(),Toast.LENGTH_LONG).show();
                 }
             }
+            return a;
         }
-        return a;
+
+        @Override
+        protected void onProgressUpdate(Integer... items) {
+
+        }
+
+        @Override
+        protected void onPostExecute(Void list) {
+            Collections.sort(photos, new Comparator<File>() {
+                public int compare(File f1, File f2) {
+                    return Long.valueOf(f2.lastModified()).compareTo(Long.valueOf(f1.lastModified()));
+                }
+            });
+            setPhotos();
+        }
     }
+
 
     void setPhotos()
     {
@@ -194,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if(requestCode == FULL_IMAGE && resultCode == IMAGE_DELETED_CODE)
         {
-            photos = imageReader(Environment.getExternalStorageDirectory());
-            setPhotos();
+            downloadTask = new ProgressTask();
+            downloadTask.execute();
             Toast.makeText(getApplicationContext(), "Refreshed!", Toast.LENGTH_SHORT).show();
         }
 
