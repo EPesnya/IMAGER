@@ -25,14 +25,14 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Filter1"
+                android:text="Texture"
                 android:id="@+id/button"
                 android:layout_marginLeft="2dp" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Filter2"
+                android:text="Shade"
                 android:id="@+id/button3"
                 android:layout_marginLeft="2dp"/>
 
@@ -46,27 +46,27 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Filter3"
+                android:text="Negativ"
                 android:id="@+id/button4"
                 android:layout_marginLeft="2dp" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="GB"
                 android:id="@+id/button5"
                 android:layout_marginLeft="2dp" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="RB"
                 android:id="@+id/button6" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="RG"
                 android:id="@+id/button7" />
     </LinearLayout>
     </HorizontalScrollView>
