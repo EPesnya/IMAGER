@@ -6,15 +6,21 @@
     android:orientation="vertical"
     android:background="@color/colorPrimaryDark">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/imgLayout"
-        android:layout_gravity="top">
+        android:id="@+id/imgLayout">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_above="@+id/tabHost"
+            android:layout_alignParentTop="true">
         <ImageView
             android:id="@+id/full_image_view"
-            android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
+            android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -49,18 +55,24 @@
                 android:src="@android:drawable/ic_menu_share"
                 android:tint="#000"/>
         </LinearLayout>
-    </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/tabLayout">
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:visibility="invisible"
+                android:background="#515151"/>
+
+        </FrameLayout>
+
         <TabHost
             android:id="@+id/tabHost"
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,7 +83,7 @@
                     android:id="@android:id/tabs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#2b2b2b"/>
+                    android:background="@color/background_floating_material_dark"/>
 
                 <FrameLayout
                     android:id="@android:id/tabcontent"
@@ -106,9 +118,7 @@
 
                                     <com.example.evgeniy.imager.SquareImageView
                                         android:layout_width="80dp"
-                                        android:layout_height="80dp"
-                                        android:background="#ffffff"
-                                        android:padding="1dp" />
+                                        android:layout_height="80dp"/>
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -129,9 +139,7 @@
 
                                     <com.example.evgeniy.imager.SquareImageView
                                         android:layout_width="80dp"
-                                        android:layout_height="80dp"
-                                        android:background="#ffffff"
-                                        android:padding="1dp" />
+                                        android:layout_height="80dp"/>
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -152,9 +160,7 @@
 
                                     <com.example.evgeniy.imager.SquareImageView
                                         android:layout_width="80dp"
-                                        android:layout_height="80dp"
-                                        android:background="#ffffff"
-                                        android:padding="1dp" />
+                                        android:layout_height="80dp"/>
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -175,9 +181,7 @@
 
                                     <com.example.evgeniy.imager.SquareImageView
                                         android:layout_width="80dp"
-                                        android:layout_height="80dp"
-                                        android:background="#ffffff"
-                                        android:padding="1dp" />
+                                        android:layout_height="80dp"/>
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -198,9 +202,7 @@
 
                                     <com.example.evgeniy.imager.SquareImageView
                                         android:layout_width="80dp"
-                                        android:layout_height="80dp"
-                                        android:background="#ffffff"
-                                        android:padding="1dp" />
+                                        android:layout_height="80dp"/>
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -231,9 +233,7 @@
 
                             <com.example.evgeniy.imager.SquareImageView
                                 android:layout_width="80dp"
-                                android:layout_height="80dp"
-                                android:background="#ffffff"
-                                android:padding="1dp" />
+                                android:layout_height="80dp"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -272,9 +272,7 @@
 
                                     <com.example.evgeniy.imager.SquareImageView
                                         android:layout_width="80dp"
-                                        android:layout_height="80dp"
-                                        android:background="#ffffff"
-                                        android:padding="1dp" />
+                                        android:layout_height="80dp"/>
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -294,9 +292,7 @@
 
                                     <com.example.evgeniy.imager.SquareImageView
                                         android:layout_width="80dp"
-                                        android:layout_height="80dp"
-                                        android:background="#ffffff"
-                                        android:padding="1dp" />
+                                        android:layout_height="80dp"/>
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -316,9 +312,7 @@
 
                                     <com.example.evgeniy.imager.SquareImageView
                                         android:layout_width="80dp"
-                                        android:layout_height="80dp"
-                                        android:background="#ffffff"
-                                        android:padding="1dp" />
+                                        android:layout_height="80dp"/>
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -327,16 +321,73 @@
                                         android:text="Blur"
                                         android:layout_gravity="center_horizontal" />
                                 </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/buttonSkatch"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
+
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="Skatch"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/buttonToon"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
+
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="Toon"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/buttonKuwahara"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
+
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="Kuwahara"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
                             </LinearLayout>
                         </HorizontalScrollView>
-                        <SeekBar
-                            android:id="@+id/seekBar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
                     </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
         </TabHost>
-    </FrameLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TabHost;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -34,6 +35,12 @@ import com.example.evgeniy.imager.filters.GBFilter;
 import com.example.evgeniy.imager.filters.RBfilter;
 import com.example.evgeniy.imager.filters.RGfilter;
 import com.example.evgeniy.imager.filters.SharpnessMatrixFilter;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.gpu.ContrastFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.KuwaharaFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.PixelationFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.SketchFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.ToonFilterTransformation;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -41,9 +48,13 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class FullImageActivity extends Activity {
+public class FullImageActivity extends Activity implements SeekBar.OnSeekBarChangeListener{
 
     static Context context;
+    int seekBarIndex = 0;
+    String position;
+    ImageView imageView;
+
     public static void ShowToast(String msg)
     {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
@@ -54,7 +65,7 @@ public class FullImageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.full_image);
 
-        final ImageView imageView = (ImageView) findViewById(R.id.full_image_view);
+        imageView = (ImageView) findViewById(R.id.full_image_view);
         LinearLayout buttonLayout = (LinearLayout) findViewById(R.id.button);
         LinearLayout buttonLayout1 = (LinearLayout) findViewById(R.id.button1);
         LinearLayout buttonLayout2 = (LinearLayout) findViewById(R.id.button2);
@@ -64,7 +75,11 @@ public class FullImageActivity extends Activity {
         LinearLayout buttonLayoutContrast = (LinearLayout) findViewById(R.id.buttonContrast);
         LinearLayout buttonLayoutSharpness = (LinearLayout) findViewById(R.id.buttonSharpness);
         LinearLayout buttonLayoutBlur = (LinearLayout) findViewById(R.id.buttonBlur);
-        SeekBar seekBar = (SeekBar)findViewById(R.id.seekBar);
+        LinearLayout buttonLayoutSketch = (LinearLayout) findViewById(R.id.buttonSkatch);
+        LinearLayout buttonLayoutToon = (LinearLayout) findViewById(R.id.buttonToon);
+        LinearLayout buttonLayoutKuw = (LinearLayout) findViewById(R.id.buttonKuwahara);
+        final SeekBar seekBar = (SeekBar)findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(this);
         FloatingActionButton fabDelete = (FloatingActionButton) findViewById(R.id.fabdelete);
         FloatingActionButton fabReset = (FloatingActionButton) findViewById(R.id.fabreset);
         FloatingActionButton fabSave = (FloatingActionButton) findViewById(R.id.fabsave);
@@ -74,7 +89,7 @@ public class FullImageActivity extends Activity {
         final Intent intent = getIntent();
 
         // Selected image id
-        final String position = intent.getStringExtra("id");
+        position = intent.getStringExtra("id");
         final File imageFile = new File(Uri.parse(position).getPath());
 
         TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
@@ -100,10 +115,10 @@ public class FullImageActivity extends Activity {
         tabHost.setCurrentTab(0);
         tabHost.bringToFront();
 
-        FrameLayout imgLayout = (FrameLayout)findViewById(R.id.imgLayout);
-        FrameLayout tabLayout = (FrameLayout)findViewById(R.id.tabLayout);
-        FrameLayout mainImgLayout = (FrameLayout)findViewById(R.id.tabLayout);
-        imgLayout.setMinimumHeight(mainImgLayout.getHeight() - tabLayout.getHeight());
+        //FrameLayout imgLayout = (FrameLayout)findViewById(R.id.imgLayout);
+        //FrameLayout tabLayout = (FrameLayout)findViewById(R.id.tabLayout);
+        //FrameLayout mainImgLayout = (FrameLayout)findViewById(R.id.tabLayout);
+        //imgLayout.setMinimumHeight(mainImgLayout.getHeight() - tabLayout.getHeight());
 
         Glide.with(context).load(position).into(imageView);
 
@@ -171,20 +186,43 @@ public class FullImageActivity extends Activity {
         View.OnClickListener buttonSharpnessClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Glide.with(context)
-                        .load(position)
-                        .transform( new SharpnessMatrixFilter(context))
-                        .into(imageView);
+                seekBarIndex = 1;
+                seekBar.setVisibility(View.VISIBLE);
             }
         };
         View.OnClickListener buttonBlurClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContrastCorrection.correction = 2;
-                Glide.with(context)
-                        .load(position)
-                        .transform( new BlurMatrixFilter(context))
-                        .into(imageView);
+                seekBarIndex = 2;
+                seekBar.setVisibility(View.VISIBLE);
+            }
+        };
+        View.OnClickListener buttonContrastClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seekBarIndex = 3;
+                seekBar.setVisibility(View.VISIBLE);
+            }
+        };
+        View.OnClickListener buttonSketchClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seekBarIndex = 4;
+                seekBar.setVisibility(View.VISIBLE);
+            }
+        };
+        View.OnClickListener buttonToonClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seekBarIndex = 5;
+                seekBar.setVisibility(View.VISIBLE);
+            }
+        };
+        View.OnClickListener buttonKuwClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seekBarIndex = 6;
+                seekBar.setVisibility(View.VISIBLE);
             }
         };
 
@@ -241,6 +279,10 @@ public class FullImageActivity extends Activity {
 
         buttonLayoutBlur.setOnClickListener(buttonBlurClick);
         buttonLayoutSharpness.setOnClickListener(buttonSharpnessClick);
+        buttonLayoutContrast.setOnClickListener(buttonContrastClick);
+        buttonLayoutSketch.setOnClickListener(buttonSketchClick);
+        buttonLayoutToon.setOnClickListener(buttonToonClick);
+        buttonLayoutKuw.setOnClickListener(buttonKuwClick);
 
 ////////////////////////////////////////////////////////////
         fabDelete.setOnClickListener(new View.OnClickListener() {
@@ -285,7 +327,7 @@ public class FullImageActivity extends Activity {
                 try {
 
                     Glide.with(context).load(position).into(imageView);
-                    findViewById(R.id.imgLayout).setMinimumHeight(findViewById(R.id.mainImgLayout).getHeight() - findViewById(R.id.tabLayout).getHeight());
+                    //findViewById(R.id.imgLayout).setMinimumHeight(findViewById(R.id.mainImgLayout).getHeight() - findViewById(R.id.tabLayout).getHeight());
                     String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
                     File file = new File("/sdcard/CameraExample/", timeStamp+".jpg");
                     fOut = new FileOutputStream(file);
@@ -312,7 +354,7 @@ public class FullImageActivity extends Activity {
             public void onClick(View v) {
                 OutputStream fOut = null;
                 try {
-                    File file = new File("/sdcard/CameraExample/", "temp.jpg");
+                    File file = new File("/sdcard/.thumbnails/", "temp.jpg");
                     fOut = new FileOutputStream(file);
 
                     Bitmap bitmap = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
@@ -328,6 +370,77 @@ public class FullImageActivity extends Activity {
                 catch (Exception e){}
             }
         });
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress,
+                                  boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        switch (seekBarIndex){
+            case 1:
+                Glide.with(context)
+                        .load(position).crossFade(0)
+                        .diskCacheStrategy( DiskCacheStrategy.NONE )
+                        .skipMemoryCache( true )
+                        .bitmapTransform( new PixelationFilterTransformation(context, seekBar.getProgress()+1))
+                        .into(imageView);
+                seekBar.setVisibility(View.INVISIBLE);
+                break;
+            case 2:
+                Glide.with(context)
+                        .load(position).crossFade(0)
+                        .diskCacheStrategy( DiskCacheStrategy.NONE )
+                        .skipMemoryCache( true )
+                        .bitmapTransform( new BlurTransformation(context, seekBar.getProgress()+1))
+                        .into(imageView);
+                seekBar.setVisibility(View.INVISIBLE);
+                break;
+            case 3:
+                Glide.with(context)
+                        .load(position).crossFade(0)
+                        .diskCacheStrategy( DiskCacheStrategy.NONE )
+                        .skipMemoryCache( true )
+                        .bitmapTransform( new ContrastFilterTransformation(context, seekBar.getProgress()+1))
+                        .into(imageView);
+                seekBar.setVisibility(View.INVISIBLE);
+                break;
+            case 4:
+                Glide.with(context)
+                        .load(position).crossFade(0)
+                        .diskCacheStrategy( DiskCacheStrategy.NONE )
+                        .skipMemoryCache( true )
+                        .bitmapTransform( new SketchFilterTransformation(context))
+                        .into(imageView);
+                seekBar.setVisibility(View.INVISIBLE);
+                break;
+            case 5:
+                Glide.with(context)
+                        .load(position).crossFade(0)
+                        .diskCacheStrategy( DiskCacheStrategy.NONE )
+                        .skipMemoryCache( true )
+                        .bitmapTransform( new ToonFilterTransformation(context))
+                        .into(imageView);
+                seekBar.setVisibility(View.INVISIBLE);
+                break;
+            case 6:
+                Glide.with(context)
+                        .load(position).crossFade(0)
+                        .diskCacheStrategy( DiskCacheStrategy.NONE )
+                        .skipMemoryCache( true )
+                        .bitmapTransform( new KuwaharaFilterTransformation(context, seekBar.getProgress()+1))
+                        .into(imageView);
+                seekBar.setVisibility(View.INVISIBLE);
+                break;
+        }
     }
 
 }

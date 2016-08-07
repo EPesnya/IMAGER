@@ -11,10 +11,11 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
  */
 
 public class SharpnessMatrixFilter extends BitmapTransformation {
-    public static double correction = 1;
+    double correction = 1;
 
-    public SharpnessMatrixFilter(Context context) {
+    public SharpnessMatrixFilter(Context context, int number) {
         super(context);
+        correction = (double) number;
     }
 
     @Override
@@ -24,10 +25,10 @@ public class SharpnessMatrixFilter extends BitmapTransformation {
                 {-0.5, -0.5, -0.5},
                 {-0.5, 5, -0.5},
                 {-0.5, -0.5, -0.5}
-        };
+        };/*
         for(int i = 0; i < 3; i++)
             for(int j = 0; j < 3; j++)
-                kernel[i][j] *= correction;
+                kernel[i][j] *= correction;*/
         Bitmap myTransformedBitmap = toTransform.copy( Bitmap.Config.ARGB_8888, true );
         int width = toTransform.getWidth();
         int height = toTransform.getHeight();
