@@ -7,7 +7,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.example.evgeniy.imager.FullImageActivity;
 
 /**
  * Created by SanQri on 07.08.2016.
@@ -24,73 +23,47 @@ public class ContrastCorrection extends BitmapTransformation {
     @Override
     protected Bitmap transform(BitmapPool pool, Bitmap toTransform,
                                int outWidth, int outHeight) {
-        double[][] kernel = {
-                {-0.5, -0.5, -0.5},
-                {-0.5, 5, -0.5},
-                {-0.5, -0.5, -0.5}
-        };
+        double k = 1 + correction / 100.0;
+
         Bitmap myTransformedBitmap = toTransform.copy( Bitmap.Config.ARGB_8888, true );
         int width = toTransform.getWidth();
         int height = toTransform.getHeight();
-        int kernelWidth = kernel.length;
-        int kernelHeight = kernel[0].length;
         int[] srcPixels = new int[width * height];
         int[] destPixels = new int[width * height];
         myTransformedBitmap.getPixels(srcPixels, 0, width, 0, 0, width, height);
 
+        int ab = 0;
+        for (int i = 0; i < srcPixels.length; i++) {
+            int R = (srcPixels[i] >> 16) & 0xff;     //bitwise shifting
+            int G = (srcPixels[i] >> 8) & 0xff;
+            int B = srcPixels[i] & 0xff;
+            ab += R+G+B;
+        }
+        ab /= 3.0;
+        ab /= srcPixels.length;
 
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                double rSum = 0, gSum = 0, bSum = 0, kSum = 0;
+        int[] arr = new int[256];
 
-                for (int i = 0; i < kernelWidth; i++)
-                {
-                    for (int j = 0; j < kernelHeight; j++)
-                    {
-                        int pixelPosX = x + (i - (kernelWidth / 2));
-                        int pixelPosY = y + (j - (kernelHeight / 2));
-                        if ((pixelPosX < 0) ||
-                                (pixelPosX >= width) ||
-                                (pixelPosY < 0) ||
-                                (pixelPosY >= height)) continue;
+        for (int i = 0; i < 255; i++) {
+            int delta = i - ab;
+            int tmp = (int)(ab + k * delta);
 
-                        int r = (srcPixels[width * pixelPosY + pixelPosX] >> 16) & 0xff;
-                        int g = (srcPixels[width * pixelPosY + pixelPosX] >> 8) & 0xff;
-                        int b = srcPixels[width * pixelPosY + pixelPosX] & 0xff;
-
-                        double kernelVal = kernel[i][j];
-
-                        rSum += r * kernelVal;
-                        gSum += g * kernelVal;
-                        bSum += b * kernelVal;
-
-                        kSum += kernelVal;
-                    }
-                }
-
-                if (kSum <= 0) kSum = 1;
-
-                //Контролируем переполнения переменных
-                rSum /= kSum;
-                if (rSum < 0) rSum = 0;
-                if (rSum > 255) rSum = 255;
-
-                gSum /= kSum;
-                if (gSum < 0) gSum = 0;
-                if (gSum > 255) gSum = 255;
-
-                bSum /= kSum;
-                if (bSum < 0) bSum = 0;
-                if (bSum > 255) bSum = 255;
-
-                //Записываем значения в результирующее изображение
-                destPixels[width * y + x] = 0xff000000 | (((int) Math.ceil(rSum)) << 16) | (((int) Math.ceil(gSum)) << 8) | ((int) Math.ceil(bSum));
-            }
+            if(tmp > 255)
+                arr[i] = 255;
+            else if(tmp < 0)
+                arr[i] = 0;
+            else
+                arr[i] = tmp;
         }
 
+        for (int i = 0; i < srcPixels.length; i++) {
+            int red = arr[(srcPixels[i] >> 16) & 0xff];
+            int green = arr[(srcPixels[i] >> 8) & 0xff];
+            int blue = arr[srcPixels[i] & 0xff];
+            destPixels[i] = 0xff000000 | (red << 16) | (green << 8) | blue;
+        }
         myTransformedBitmap.setPixels(destPixels, 0, width, 0, 0, width, height);
+
         return myTransformedBitmap;
     }
 
