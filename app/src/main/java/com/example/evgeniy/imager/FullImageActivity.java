@@ -187,6 +187,16 @@ public class FullImageActivity extends Activity {
                         .into(imageView);
             }
         };
+        View.OnClickListener buttonContrastClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContrastCorrection.correction = 2;
+                Glide.with(context)
+                        .load(position)
+                        .transform( new ContrastCorrection(context))
+                        .into(imageView);
+            }
+        };
 
         /////////////////////////////////////////////////////////////////////
 
@@ -241,6 +251,7 @@ public class FullImageActivity extends Activity {
 
         buttonLayoutBlur.setOnClickListener(buttonBlurClick);
         buttonLayoutSharpness.setOnClickListener(buttonSharpnessClick);
+        buttonLayoutContrast.setOnClickListener(buttonContrastClick);
 
 ////////////////////////////////////////////////////////////
         fabDelete.setOnClickListener(new View.OnClickListener() {
