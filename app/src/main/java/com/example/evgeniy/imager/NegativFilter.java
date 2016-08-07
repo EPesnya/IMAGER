@@ -21,7 +21,6 @@ public class NegativFilter extends BitmapTransformation {
     @Override
     protected Bitmap transform(BitmapPool pool, Bitmap toTransform,
                                int outWidth, int outHeight) {
-        //Bitmap myTransformedBitmap = toTransform.copy( Bitmap.Config.ARGB_8888, true );
         Bitmap myTransformedBitmap = toTransform.copy( Bitmap.Config.ARGB_8888, true );
         int width = toTransform.getWidth();
         int height = toTransform.getHeight();

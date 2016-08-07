@@ -15,18 +15,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.example.evgeniy.imager.filters.BlurMatrixFilter;
+import com.example.evgeniy.imager.filters.ContrastCorrection;
 import com.example.evgeniy.imager.filters.MatrixFilter;
 import com.example.evgeniy.imager.filters.GBFilter;
 import com.example.evgeniy.imager.filters.RBfilter;
 import com.example.evgeniy.imager.filters.RGfilter;
+import com.example.evgeniy.imager.filters.SharpnessMatrixFilter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,8 +43,14 @@ import java.util.Date;
 
 public class FullImageActivity extends Activity {
 
+    static Context context;
+    public static void ShowToast(String msg)
+    {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
 
     public void onCreate(Bundle savedInstanceState) {
+        context = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.full_image);
 
@@ -48,11 +61,14 @@ public class FullImageActivity extends Activity {
         LinearLayout buttonLayout3 = (LinearLayout) findViewById(R.id.button3);
         LinearLayout buttonLayout4 = (LinearLayout) findViewById(R.id.button4);
         LinearLayout buttonLayout5 = (LinearLayout) findViewById(R.id.button5);
+        LinearLayout buttonLayoutContrast = (LinearLayout) findViewById(R.id.buttonContrast);
+        LinearLayout buttonLayoutSharpness = (LinearLayout) findViewById(R.id.buttonSharpness);
+        LinearLayout buttonLayoutBlur = (LinearLayout) findViewById(R.id.buttonBlur);
+        SeekBar seekBar = (SeekBar)findViewById(R.id.seekBar);
         FloatingActionButton fabDelete = (FloatingActionButton) findViewById(R.id.fabdelete);
         FloatingActionButton fabReset = (FloatingActionButton) findViewById(R.id.fabreset);
         FloatingActionButton fabSave = (FloatingActionButton) findViewById(R.id.fabsave);
         FloatingActionButton fabShare = (FloatingActionButton) findViewById(R.id.fabshare);
-        final Context context = this;
 
         // get intent data
         final Intent intent = getIntent();
@@ -60,6 +76,34 @@ public class FullImageActivity extends Activity {
         // Selected image id
         final String position = intent.getStringExtra("id");
         final File imageFile = new File(Uri.parse(position).getPath());
+
+        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+
+        tabHost.setup();
+
+        TabHost.TabSpec tabSpec = tabHost.newTabSpec("tag1");
+
+        tabSpec.setContent(R.id.colorsTab);
+        tabSpec.setIndicator("Colors");
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("tag2");
+        tabSpec.setContent(R.id.noisesTab);
+        tabSpec.setIndicator("Noises");
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("tag3");
+        tabSpec.setContent(R.id.correctionTab);
+        tabSpec.setIndicator("Corrections");
+        tabHost.addTab(tabSpec);
+
+        tabHost.setCurrentTab(0);
+        tabHost.bringToFront();
+
+        FrameLayout imgLayout = (FrameLayout)findViewById(R.id.imgLayout);
+        FrameLayout tabLayout = (FrameLayout)findViewById(R.id.tabLayout);
+        FrameLayout mainImgLayout = (FrameLayout)findViewById(R.id.tabLayout);
+        imgLayout.setMinimumHeight(mainImgLayout.getHeight() - tabLayout.getHeight());
 
         Glide.with(context).load(position).into(imageView);
 
@@ -124,6 +168,26 @@ public class FullImageActivity extends Activity {
             }
         };
 
+        View.OnClickListener buttonSharpnessClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(context)
+                        .load(position)
+                        .transform( new SharpnessMatrixFilter(context))
+                        .into(imageView);
+            }
+        };
+        View.OnClickListener buttonBlurClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContrastCorrection.correction = 2;
+                Glide.with(context)
+                        .load(position)
+                        .transform( new BlurMatrixFilter(context))
+                        .into(imageView);
+            }
+        };
+
         /////////////////////////////////////////////////////////////////////
 
         Glide.with(context)
@@ -175,6 +239,9 @@ public class FullImageActivity extends Activity {
                 .into((ImageView) buttonLayout5.getChildAt(0));
         buttonLayout5.setOnClickListener(btnSixClk);
 
+        buttonLayoutBlur.setOnClickListener(buttonBlurClick);
+        buttonLayoutSharpness.setOnClickListener(buttonSharpnessClick);
+
 ////////////////////////////////////////////////////////////
         fabDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,6 +283,9 @@ public class FullImageActivity extends Activity {
             @Override
             public void onClick(View v) {
                 try {
+
+                    Glide.with(context).load(position).into(imageView);
+                    findViewById(R.id.imgLayout).setMinimumHeight(findViewById(R.id.mainImgLayout).getHeight() - findViewById(R.id.tabLayout).getHeight());
                     String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
                     File file = new File("/sdcard/CameraExample/", timeStamp+".jpg");
                     fOut = new FileOutputStream(file);
@@ -259,6 +329,5 @@ public class FullImageActivity extends Activity {
             }
         });
     }
-
 
 }

@@ -26,7 +26,6 @@ public class RGfilter extends BitmapTransformation {
         int[] srcPixels = new int[width * height];
         int[] destPixels = new int[width * height];
         myTransformedBitmap.getPixels(srcPixels, 0, width, 0, 0, width, height);
-
         for (int i = 0; i < srcPixels.length; i++) {
             destPixels[i] = (srcPixels[i] & 0xff0000ff) | ((srcPixels[i] & 0x0000ff00) << 8)
                     | ((srcPixels[i] & 0x00ff0000) >> 8);

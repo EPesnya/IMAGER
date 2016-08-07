@@ -1,206 +1,342 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainImgLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark">
 
-    <ImageView
-        android:id="@+id/full_image_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imgLayout"
+        android:layout_gravity="top">
+        <ImageView
+            android:id="@+id/full_image_view"
+            android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabdelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:src="@android:drawable/ic_menu_delete"
+                android:tint="#000" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabreset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:src="@android:drawable/ic_menu_revert"
+                android:tint="#000" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabsave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:src="@android:drawable/ic_menu_save"
+                android:tint="#000"/>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabshare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:src="@android:drawable/ic_menu_share"
+                android:tint="#000"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabdelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:src="@android:drawable/ic_menu_delete"
-            android:tint="#000" />
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabreset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:src="@android:drawable/ic_menu_revert"
-            android:tint="#000" />
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabsave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:src="@android:drawable/ic_menu_save"
-            android:tint="#000"/>
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabshare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:src="@android:drawable/ic_menu_share"
-            android:tint="#000"/>
+        android:layout_alignParentBottom="true"
+        android:id="@+id/tabLayout">
+        <TabHost
+            android:id="@+id/tabHost"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#2b2b2b"/>
 
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/horizontalScrollView"
-        android:layout_gravity="bottom|center_horizontal"
-        android:scrollbars="none">
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
+                    <LinearLayout
+                        android:id="@+id/colorsTab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-        android:background="#2b2b2b"
-        android:gravity="bottom">
+                        <HorizontalScrollView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/horizontalScrollView"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:scrollbars="none">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/colorPrimaryDark">
 
-        <LinearLayout
-            android:id="@+id/button"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+                                <LinearLayout
+                                    android:id="@+id/button"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
 
-            <com.example.evgeniy.imager.SquareImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#ffffff"
-                android:padding="1dp" />
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:background="#ffffff"
+                                        android:padding="1dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#ffffff"
-                android:text="Рельеф"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="Рельеф"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/button1"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+                                <LinearLayout
+                                    android:id="@+id/button2"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
 
-            <com.example.evgeniy.imager.SquareImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#ffffff"
-                android:padding="1dp" />
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:background="#ffffff"
+                                        android:padding="1dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#ffffff"
-                android:text="Шум"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="Негатив"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/button2"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+                                <LinearLayout
+                                    android:id="@+id/button3"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
 
-            <com.example.evgeniy.imager.SquareImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#ffffff"
-                android:padding="1dp" />
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:background="#ffffff"
+                                        android:padding="1dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#ffffff"
-                android:text="Негатив"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="GB"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/button3"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+                                <LinearLayout
+                                    android:id="@+id/button4"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
 
-            <com.example.evgeniy.imager.SquareImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#ffffff"
-                android:padding="1dp" />
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:background="#ffffff"
+                                        android:padding="1dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#ffffff"
-                android:text="GB"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="RB"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/button4"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+                                <LinearLayout
+                                    android:id="@+id/button5"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
 
-            <com.example.evgeniy.imager.SquareImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#ffffff"
-                android:padding="1dp" />
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:background="#ffffff"
+                                        android:padding="1dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#ffffff"
-                android:text="RB"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="RG"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
+                            </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/button5"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+                        </HorizontalScrollView>
+                    </LinearLayout>
 
-            <com.example.evgeniy.imager.SquareImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="#ffffff"
-                android:padding="1dp" />
+                    <LinearLayout
+                        android:id="@+id/noisesTab"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:id="@+id/button1"
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="8dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:backgroundTint="@color/colorPrimaryDark">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#ffffff"
-                android:text="RG"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
+                            <com.example.evgeniy.imager.SquareImageView
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:background="#ffffff"
+                                android:padding="1dp" />
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#ffffff"
+                                android:text="Шум"
+                                android:layout_gravity="center_horizontal" />
+                        </LinearLayout>
+                    </LinearLayout>
 
-    </LinearLayout>
-    </HorizontalScrollView>
+                    <LinearLayout
+                        android:id="@+id/correctionTab"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
+                        <HorizontalScrollView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/horizontalScrollViewCorections"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:scrollbars="none">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/colorPrimaryDark"
+                                android:orientation="horizontal">
+                                <LinearLayout
+                                    android:id="@+id/buttonContrast"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
 
-</FrameLayout>
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:background="#ffffff"
+                                        android:padding="1dp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="Contrast"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/buttonSharpness"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
+
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:background="#ffffff"
+                                        android:padding="1dp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="Sharpness"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/buttonBlur"
+                                    android:orientation="vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="8dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp">
+
+                                    <com.example.evgeniy.imager.SquareImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:background="#ffffff"
+                                        android:padding="1dp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#ffffff"
+                                        android:text="Blur"
+                                        android:layout_gravity="center_horizontal" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </HorizontalScrollView>
+                        <SeekBar
+                            android:id="@+id/seekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+        </TabHost>
+    </FrameLayout>
+
+</RelativeLayout>
