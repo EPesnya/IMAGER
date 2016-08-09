@@ -13,9 +13,9 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 public class SharpnessMatrixFilter extends BitmapTransformation {
     double correction = 1;
 
-    public SharpnessMatrixFilter(Context context, int number) {
+    public SharpnessMatrixFilter(Context context, double number) {
         super(context);
-        correction = (double) number;
+        correction = number;
     }
 
     @Override

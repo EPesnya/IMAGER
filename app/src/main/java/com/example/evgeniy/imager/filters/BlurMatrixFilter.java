@@ -13,9 +13,9 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 public class BlurMatrixFilter extends BitmapTransformation {
     double correction = 1;
 
-    public BlurMatrixFilter(Context context, int number) {
+    public BlurMatrixFilter(Context context, double number) {
         super(context);
-        correction = (double) number + 1;
+        correction = number + 1;
     }
 
     @Override
